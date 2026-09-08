@@ -1,0 +1,2 @@
+hostname TEST-LEARNING
+netsentinel-test-learning

@@ -1,0 +1,14 @@
+hostname SIH-Router-01
+
+version 15.2
+
+ip ssh version 2
+
+line vty 0 4
+ transport input telnet
+
+no logging
+
+ntp server 192.168.1.10
+
+enable password cisco123

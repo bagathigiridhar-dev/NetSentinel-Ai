@@ -1,0 +1,12 @@
+[
+  {
+    "command": "ip ssh version 2",
+    "normalized_command": "ip ssh version 2",
+    "category": "secure_remote_administration",
+    "parameter": "ssh_version",
+    "value": 2,
+    "severity": "HIGH",
+    "source": "administrator_training",
+    "status": "active"
+  }
+]

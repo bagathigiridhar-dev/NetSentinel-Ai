@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NetSentinel AI // Security Command Center</title>
+
+<style>
+/* =========================================================
+   NETSENTINEL AI — SCI-FI SECURITY COMMAND CENTER
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #030712;
+    --panel: #07111f;
+    --panel2: #0a1728;
+    --border: #17324d;
+    --cyan: #00e5ff;
+    --blue: #3b82f6;
+    --green: #00ff9c;
+    --red: #ff3158;
+    --orange: #ff9d00;
+    --text: #dbeafe;
+    --muted: #7890a8;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 50% -20%, rgba(0,229,255,.12), transparent 40%),
+        radial-gradient(circle at 100% 50%, rgba(59,130,246,.08), transparent 35%),
+        var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+/* GRID BACKGROUND */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .18;
+    background-image:
+        linear-gradient(rgba(0,229,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+/* SCANLINE */
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,.015) 4px
+    );
+    z-index: 999;
+}
+
+/* HEADER */
+
+.header {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    background: rgba(3,7,18,.88);
+    backdrop-filter: blur(16px);
+    padding: 22px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--cyan);
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 25px;
+    color: var(--cyan);
+    box-shadow:
+        0 0 15px rgba(0,229,255,.35),
+        inset 0 0 15px rgba(0,229,255,.08);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 25px;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.header h1 span {
+    color: var(--cyan);
+}
+
+.header p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--green);
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: .35;
+    }
+}
+
+/* CONTAINER */
+
+.container {
+    width: min(1400px, 94%);
+    margin: 35px auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* HERO */
+
+.hero {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.hero .tag {
+    display: inline-block;
+    border: 1px solid rgba(0,229,255,.35);
+    color: var(--cyan);
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    background: rgba(0,229,255,.04);
+}
+
+.hero h2 {
+    margin: 0;
+    font-size: clamp(30px, 5vw, 54px);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 0 0 25px rgba(0,229,255,.2);
+}
+
+.hero h2 span {
+    color: var(--cyan);
+}
+
+.hero p {
+    color: var(--muted);
+    max-width: 700px;
+    margin: 14px auto;
+}
+
+/* CARD */
+
+.card {
+    position: relative;
+    background:
+        linear-gradient(145deg, rgba(8,23,40,.96), rgba(3,10,20,.96));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.3),
+        inset 0 0 30px rgba(0,229,255,.015);
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 70px;
+    height: 2px;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.card-title h2 {
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.card-title span {
+    color: var(--muted);
+    font-family: monospace;
+    font-size: 11px;
+}
+
+/* UPLOAD */
+
+.upload-box {
+    border: 1px dashed #28516d;
+    border-radius: 12px;
+    padding: 40px 25px;
+    text-align: center;
+    background: rgba(0,229,255,.015);
+    transition: .3s;
+}
+
+.upload-box:hover {
+    border-color: var(--cyan);
+    box-shadow: inset 0 0 30px rgba(0,229,255,.04);
+}
+
+.upload-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 12px rgba(0,229,255,.5));
+}
+
+.upload-box h3 {
+    margin: 0 0 7px;
+}
+
+.upload-box p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+input[type="file"] {
+    width: 100%;
+    max-width: 450px;
+    margin: 18px auto;
+    color: var(--muted);
+}
+
+input[type="file"]::file-selector-button {
+    background: #0d2238;
+    border: 1px solid #28516d;
+    color: var(--cyan);
+    padding: 10px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+/* CONTROLS */
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+select,
+button {
+    font-family: inherit;
+}
+
+select {
+    padding: 13px 18px;
+    border-radius: 8px;
+    border: 1px solid #28516d;
+    background: #07182a;
+    color: var(--cyan);
+    outline: none;
+    cursor: pointer;
+}
+
+button {
+    padding: 13px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--cyan);
+    background: linear-gradient(90deg, #063a50, #07526b);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: .25s;
+    box-shadow: 0 0 12px rgba(0,229,255,.12);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0,229,255,.3);
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.download-button {
+    background: linear-gradient(90deg, #075c42, #087c55);
+    border-color: var(--green);
+    margin-top: 20px;
+}
+
+/* MESSAGE */
+
+.message {
+    margin-top: 18px;
+    padding: 14px;
+    border: 1px solid #1e4c6b;
+    border-radius: 8px;
+    background: rgba(0,229,255,.05);
+    color: var(--cyan);
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.error {
+    border-color: rgba(255,49,88,.5);
+    background: rgba(255,49,88,.06);
+    color: #ff6b87;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* DASHBOARD */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    position: relative;
+    background: #061322;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 22px 15px;
+    text-align: center;
+}
+
+.stat h3 {
+    margin: 0 0 13px;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.stat-value {
+    font-size: 31px;
+    font-weight: bold;
+    color: var(--cyan);
+    text-shadow: 0 0 15px rgba(0,229,255,.25);
+}
+
+.stat:nth-child(3) .stat-value {
+    color: var(--red);
+    text-shadow: 0 0 15px rgba(255,49,88,.3);
+}
+
+.stat:nth-child(4) .stat-value {
+    color: var(--orange);
+}
+
+/* DEVICE */
+
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.device-item {
+    background: #061322;
+    border: 1px solid var(--border);
+    padding: 17px;
+    border-radius: 9px;
+}
+
+.device-label {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+}
+
+.device-item strong {
+    color: var(--cyan);
+    font-family: monospace;
+}
+
+/* TABLE */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th,
+td {
+    padding: 14px;
+    border-bottom: 1px solid #122a40;
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    background: #08192b;
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+tr:hover td {
+    background: rgba(0,229,255,.025);
+}
+
+code {
+    color: #7dd3fc;
+    font-family: Consolas, monospace;
+}
+
+/* STATUS */
+
+.PASS {
+    color: var(--green);
+    font-weight: bold;
+}
+
+.FAIL {
+    color: var(--red);
+    font-weight: bold;
+}
+
+.UNKNOWN {
+    color: var(--orange);
+    font-weight: bold;
+}
+
+.risk-critical {
+    color: var(--red);
+}
+
+.risk-high {
+    color: #ff6b35;
+}
+
+.risk-medium {
+    color: var(--orange);
+}
+
+.risk-low {
+    color: var(--green);
+}
+
+/* TERMINAL */
+
+.terminal {
+    background: #02060c;
+    border: 1px solid #16344d;
+    border-radius: 9px;
+    padding: 18px;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #8fb4cb;
+}
+
+.terminal .green {
+    color: var(--green);
+}
+
+.terminal .cyan {
+    color: var(--cyan);
+}
+
+.terminal .red {
+    color: var(--red);
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    padding: 35px 10px;
+    color: #4f687e;
+    font-family: monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.footer span {
+    color: var(--cyan);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .device-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding: 18px;
+    }
+
+    .system-status {
+        display: none;
+    }
+
+    .container {
+        width: 94%;
+        margin-top: 22px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .dashboard,
+    .device-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h2 {
+        font-size: 29px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ======================================================
+     HEADER
+====================================================== -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="logo">
+            🛡️
+        </div>
+
+        <div>
+            <h1>NET<span>SENTINEL</span> AI</h1>
+            <p>AI-DRIVEN MULTI-VENDOR NETWORK SECURITY COMPLIANCE AUDITOR</p>
+        </div>
+
+    </div>
+
+    <div class="system-status">
+        <span class="status-dot"></span>
+        SYSTEM ONLINE
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="tag">
+            CYBER DEFENSE // COMPLIANCE INTELLIGENCE
+        </div>
+
+        <h2>
+            Secure Your <span>Network</span>
+        </h2>
+
+        <p>
+            Analyze network configurations against industry security
+            frameworks using an intelligent vendor-agnostic compliance engine.
+        </p>
+
+    </section>
+
+
+    <!-- ==================================================
+         ANALYSIS
+    ================================================== -->
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <h2>⚡ Configuration Analysis</h2>
+
+            <span>ENGINE::READY</span>
+
+        </div>
+
+
+        <div class="upload-box">
+
+            <div class="upload-icon">
+                ◈
+            </div>
+
+            <h3>UPLOAD NETWORK CONFIGURATION</h3>
+
+            <p>
+                Cisco / Juniper / Fortinet / Multi-Vendor
+            </p>
+
+            <input
+                type="file"
+                id="configFile"
+                accept=".txt,.cfg,.conf"
+            >
+
+            <div class="controls">
+
+                <select id="framework">
+
+                    <option value="CIS">CIS</option>
+                    <option value="NIST">NIST</option>
+                    <option value="STIG">STIG</option>
+                    <option value="ISO">ISO 27001</option>
+                    <option value="PCI">PCI-DSS</option>
+
+                </select>
+
+                <button
+                    id="analyzeButton"
+                    onclick="analyzeConfig()"
+                >
+                    🔍 ANALYZE CONFIGURATION
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="message"
+            class="message hidden">
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         RESULTS
+    ================================================== -->
+
+    <div id="results" class="hidden">
+
+
+        <!-- SECURITY OVERVIEW -->
+
+        <section class="card">
+
+            <div class="card-title">
+
+                <h2>◉ Security Overview</h2>
+
+                <span>LIVE ANALYSIS</span>
+
+            </div>
+
+
+            <div class="dashboard">
+
+
+                <div class="stat">
+
+                    <h3>Security Score</h3>
+
+                    <div
+                        id="securityScore"
+                        class="stat-value">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <h3>Compliance</h3>
+
+                    <div
+                        id="compliance"
+                        class="stat-value">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <h3>Risk Level</h3>
+
+                    <div
+                        id="riskLevel"
+                        class="stat-value">
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <h3>Risk Score</h3>
+
+                    <div
+                        id="riskScore"
+                        class="stat-value">
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div style="text-align:center;">
+
+                <button
+                    id="downloadButton"
+                    class="download-button"
+                    onclick="downloadReport()">
+
+                    📄 DOWNLOAD SECURITY REPORT
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- DEVICE -->
+
+        <section class="card">
+
+            <div class="card-title">
+
+                <h2>▣ Device Identification</h2>
+
+                <span>DEVICE::PROFILE</span>
+
+            </div>
+
+
+            <div class="device-grid">
+
+
+                <div class="device-item">
+
+                    <span class="device-label">
+                        Configuration File
+                    </span>
+
+                    <strong id="deviceFile">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="device-item">
+
+                    <span class="device-label">
+                        Vendor
+                    </span>
+
+                    <strong id="deviceVendor">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="device-item">
+
+                    <span class="device-label">
+                        Hostname
+                    </span>
+
+                    <strong id="hostname">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="device-item">
+
+                    <span class="device-label">
+                        Software Version
+                    </span>
+
+                    <strong id="softwareVersion">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FINDINGS -->
+
+        <section class="card">
+
+            <div class="card-title">
+
+                <h2>⚠ Compliance Findings</h2>
+
+                <span>THREAT::ASSESSMENT</span>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Control</th>
+                            <th>Rule</th>
+                            <th>Status</th>
+                            <th>Severity</th>
+                            <th>Remediation</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="findingsTable"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- CROSS FRAMEWORK -->
+
+        <section class="card">
+
+            <div class="card-title">
+
+                <h2>◈ Cross-Framework Security Matrix</h2>
+
+                <span>FRAMEWORK::ANALYSIS</span>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Framework</th>
+                            <th>Score</th>
+                            <th>Compliance</th>
+                            <th>Passed</th>
+                            <th>Failed</th>
+                            <th>Unknown</th>
+                            <th>Risk</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="frameworkTable"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- UNKNOWN CONFIGURATION -->
+
+        <section class="card">
+
+            <div class="card-title">
+
+                <h2>◌ Unknown Configuration Queue</h2>
+
+                <span>AI::LEARNING_QUEUE</span>
+
+            </div>
+
+
+            <div class="terminal">
+
+                <div class="cyan">
+                    NETSENTINEL://UNKNOWN_CONFIGURATION_SCAN
+                </div>
+
+                <div>
+                    ─────────────────────────────────────────
+                </div>
+
+                <div class="green">
+                    SYSTEM: Mapping unrecognized commands...
+                </div>
+
+                <br>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Command</th>
+                                <th>Vendor</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="unknownTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORT -->
+
+        <section class="card">
+
+            <div class="card-title">
+
+                <h2>▰ Complete Security Report</h2>
+
+                <span>REPORT::GENERATED</span>
+
+            </div>
+
+            <p style="color:var(--muted);">
+
+                Generate a complete security assessment containing
+                compliance findings, risk analysis, device intelligence,
+                cross-framework results and unknown configurations.
+
+            </p>
+
+            <button
+                class="download-button"
+                onclick="downloadReport()">
+
+                📄 DOWNLOAD COMPLETE PDF REPORT
+
+            </button>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+
+    NETSENTINEL AI //
+    <span>TEAM CYBER FORGE</span> //
+    PS ID 26155 //
+    NETWORK SECURITY COMPLIANCE ENGINE
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   API CONFIGURATION
+========================================================= */
+
+const API_URL = "http://127.0.0.1:8000";
+
+let latestReport = null;
+
+
+/* =========================================================
+   ANALYZE CONFIGURATION
+========================================================= */
+
+async function analyzeConfig() {
+
+    const fileInput =
+        document.getElementById("configFile");
+
+    const framework =
+        document.getElementById("framework").value;
+
+    const button =
+        document.getElementById("analyzeButton");
+
+    const message =
+        document.getElementById("message");
+
+    const results =
+        document.getElementById("results");
+
+
+    if (!fileInput.files.length) {
+
+        showMessage(
+            "⚠ Please select a network configuration file.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    const file =
+        fileInput.files[0];
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "framework",
+        framework
+    );
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "⟳ ANALYZING NETWORK...";
+
+
+    showMessage(
+        "NETSENTINEL AI :: Analyzing configuration against " +
+        framework +
+        " framework..."
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/analyze",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Backend returned HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        latestReport = data;
+
+
+        displayResults(data);
+
+
+        message.classList.add(
+            "hidden"
+        );
+
+
+        results.classList.remove(
+            "hidden"
+        );
+
+
+        results.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    catch (error) {
+
+        showMessage(
+            "✖ Unable to connect to NetSentinel backend. Make sure the FastAPI server is running on port 8000.",
+            true
+        );
+
+        console.error(error);
+
+    }
+
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "🔍 ANALYZE CONFIGURATION";
+
+    }
+
+}
+
+
+/* =========================================================
+   DISPLAY RESULTS
+========================================================= */
+
+function displayResults(data) {
+
+    const summary =
+        data.compliance_summary || {};
+
+
+    document.getElementById(
+        "securityScore"
+    ).textContent =
+        summary.security_score ?? "-";
+
+
+    document.getElementById(
+        "compliance"
+    ).textContent =
+        summary.compliance_percentage != null
+            ? summary.compliance_percentage + "%"
+            : "-";
+
+
+    document.getElementById(
+        "riskLevel"
+    ).textContent =
+        summary.risk_level || "-";
+
+
+    document.getElementById(
+        "riskScore"
+    ).textContent =
+        summary.risk_score ?? "-";
+
+
+    document.getElementById(
+        "deviceFile"
+    ).textContent =
+        data.device || "-";
+
+
+    document.getElementById(
+        "deviceVendor"
+    ).textContent =
+        data.vendor || "-";
+
+
+    document.getElementById(
+        "hostname"
+    ).textContent =
+        data.device_identification?.hostname || "-";
+
+
+    document.getElementById(
+        "softwareVersion"
+    ).textContent =
+        data.device_identification?.software_version || "-";
+
+
+    displayFindings(
+        data.findings || []
+    );
+
+
+    displayFrameworks(
+        data.cross_framework_summary?.framework_scores
+    );
+
+
+    displayUnknown(
+        data.unknown_configuration_queue
+    );
+
+}
+
+
+/* =========================================================
+   FINDINGS
+========================================================= */
+
+function displayFindings(findings) {
+
+    const table =
+        document.getElementById(
+            "findingsTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    if (!findings.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    No compliance findings detected.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    findings.forEach(
+        finding => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHtml(
+                        finding.control_id
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        finding.rule
+                    )}
+                </td>
+
+                <td class="${escapeHtml(
+                    finding.status
+                )}">
+                    ${escapeHtml(
+                        finding.status
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        finding.severity
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        finding.remediation
+                    )}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FRAMEWORKS
+========================================================= */
+
+function displayFrameworks(frameworks) {
+
+    const table =
+        document.getElementById(
+            "frameworkTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    if (!frameworks) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="7">
+                    No cross-framework data available.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    Object.entries(frameworks)
+        .forEach(
+            ([name, data]) => {
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td>
+                        <strong>
+                            ${escapeHtml(name)}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            data.security_score
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            data.compliance_percentage
+                        )}%
+                    </td>
+
+                    <td class="PASS">
+                        ${escapeHtml(
+                            data.passed
+                        )}
+                    </td>
+
+                    <td class="FAIL">
+                        ${escapeHtml(
+                            data.failed
+                        )}
+                    </td>
+
+                    <td class="UNKNOWN">
+                        ${escapeHtml(
+                            data.unknown
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            data.risk_level
+                        )}
+                    </td>
+
+                `;
+
+
+                table.appendChild(row);
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   UNKNOWN CONFIGURATION
+========================================================= */
+
+function displayUnknown(items) {
+
+    const table =
+        document.getElementById(
+            "unknownTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    if (!items || !items.length) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="4">
+
+                    <span class="green">
+                        ✓ No unknown configuration detected.
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    items.forEach(
+        item => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHtml(item.id)}
+                </td>
+
+                <td>
+                    <code>
+                        ${escapeHtml(
+                            item.command
+                        )}
+                    </code>
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        item.vendor
+                    )}
+                </td>
+
+                <td class="UNKNOWN">
+                    ${escapeHtml(
+                        item.status
+                    )}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DOWNLOAD REPORT
+========================================================= */
+
+function downloadReport() {
+
+    if (!latestReport) {
+
+        showMessage(
+            "⚠ Analyze a configuration before downloading the report.",
+            true
+        );
+
+        return;
+
+    }
+
+
+    const jsonData =
+        JSON.stringify(
+            latestReport,
+            null,
+            2
+        );
+
+
+    const blob =
+        new Blob(
+            [jsonData],
+            {
+                type: "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "netsentinel-security-report.json";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+    text,
+    error = false
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.textContent =
+        text;
+
+
+    message.classList.remove(
+        "hidden"
+    );
+
+
+    if (error) {
+
+        message.classList.add(
+            "error"
+        );
+
+    }
+
+    else {
+
+        message.classList.remove(
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+</script>
+
+</body>
+</html>

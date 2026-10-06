@@ -1542,80 +1542,59 @@ function displayUnknown(items) {
    DOWNLOAD REPORT
 ========================================================= */
 
-async function downloadReport() {
+function downloadReport() {
 
     if (!latestReport) {
-        showMessage("⚠ Analyze a configuration before downloading the report.", true);
+
+        showMessage(
+            "⚠ Analyze a configuration before downloading the report.",
+            true
+        );
+
         return;
+
     }
 
-    const fileInput = document.getElementById("configFile");
-    const framework = document.getElementById("framework").value;
-    const downloadButtons = document.querySelectorAll(".download-button");
 
-    if (!fileInput.files.length) {
-        showMessage("⚠ Please select the configuration file again.", true);
-        return;
-    }
+    const jsonData =
+        JSON.stringify(
+            latestReport,
+            null,
+            2
+        );
 
-    const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
-    formData.append("framework", framework);
 
-    downloadButtons.forEach(button => {
-        button.disabled = true;
-        button.dataset.originalText = button.textContent;
-        button.textContent = "⟳ GENERATING PDF...";
-    });
+    const blob =
+        new Blob(
+            [jsonData],
+            {
+                type: "application/json"
+            }
+        );
 
-    showMessage("NETSENTINEL AI :: Generating complete PDF security report...");
 
-    try {
-        const response = await fetch(API_URL + "/report", {
-            method: "POST",
-            body: formData
-        });
+    const url =
+        URL.createObjectURL(blob);
 
-        if (!response.ok) {
-            let detail = "PDF generation failed (HTTP " + response.status + ").";
-            try {
-                const errorData = await response.json();
-                if (errorData.detail) detail = errorData.detail;
-            } catch (_) {}
-            throw new Error(detail);
-        }
 
-        const contentType = response.headers.get("content-type") || "";
-        if (!contentType.toLowerCase().includes("application/pdf")) {
-            throw new Error("The server did not return a PDF. Check the FastAPI /report endpoint.");
-        }
+    const link =
+        document.createElement("a");
 
-        const blob = await response.blob();
-        if (!blob.size) throw new Error("The generated PDF is empty.");
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "NetSentinel_Complete_Report.pdf";
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    link.href = url;
 
-        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    link.download =
+        "netsentinel-security-report.json";
 
-        showMessage("✅ Complete PDF security report downloaded successfully.");
-    }
-    catch (error) {
-        console.error("NetSentinel PDF download error:", error);
-        showMessage("✖ PDF download failed: " + error.message, true);
-    }
-    finally {
-        downloadButtons.forEach(button => {
-            button.disabled = false;
-            button.textContent = button.dataset.originalText || "📄 DOWNLOAD COMPLETE PDF REPORT";
-        });
-    }
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
 }
 
 

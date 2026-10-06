@@ -791,9 +791,9 @@ code {
                 <button
                     id="downloadButton"
                     class="download-button"
-                    onclick="downloadReport()">
+                    onclick="downloadJSON()">
 
-                    📄 DOWNLOAD SECURITY REPORT
+                    📋 DOWNLOAD JSON REPORT
 
                 </button>
 
@@ -1535,6 +1535,37 @@ function displayUnknown(items) {
         }
     );
 
+}
+
+
+/* =========================================================
+   DOWNLOAD JSON REPORT
+========================================================= */
+
+function downloadJSON() {
+
+    if (!latestReport) {
+        showMessage("⚠ Analyze a configuration before downloading the report.", true);
+        return;
+    }
+
+    const blob = new Blob(
+        [JSON.stringify(latestReport, null, 2)],
+        { type: "application/json" }
+    );
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "NetSentinel_Report.json";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+
+    showMessage("✅ JSON security report downloaded successfully.");
 }
 
 
